@@ -72,6 +72,12 @@ public class LineItemController {
 		}
 		return l.get();
 	}
+	
+	// List line items for a purchase request
+		@GetMapping("/lines-for-pr/{id}")
+		public Optional<LineItem> getPrRequestById(@PathVariable int id) {
+			return lineItemRepo.findById(id);
+		}
 
 
 }
