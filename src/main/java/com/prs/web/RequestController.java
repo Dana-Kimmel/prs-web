@@ -1,5 +1,6 @@
 package com.prs.web;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,6 +39,13 @@ public class RequestController {
 	public List<Request> getAll() {
 		return requestRepo.findAll();
 	}
+	
+	// Get all requests in review status and userId != id
+		@GetMapping("/list-review/{id}")
+		public List<Request> getRequestsInReview(@PathVariable int id) {
+			return requestRepo.findByUserIdNotAndStatus(id, "review");
+		}
+	
 
 	// Get a request by id
 	@GetMapping("/{id}")
@@ -58,6 +66,21 @@ public class RequestController {
 		r = requestRepo.save(r);
 		return r;
 	}
+	
+	// Submit request for review
+		@PutMapping("/submit-review")
+		public Request submitRequestForReview(@RequestBody Request r) {
+			// Change status based on requirements
+			if (r.getTotal() <= 50.0) {
+				r.setStatus("approved");
+			} else {
+				r.setStatus("review");
+			}
+			// Set requests submittedDate to the current date
+			r.setSubmittedDate(LocalDateTime.now());
+			r = requestRepo.save(r);
+			return r;
+		}
 
 	// Delete a request
 	@DeleteMapping("/{id}")
@@ -73,4 +96,5 @@ public class RequestController {
 		return r.get();
 	}
 
+	
 }

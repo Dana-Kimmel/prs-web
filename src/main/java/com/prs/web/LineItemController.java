@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.prs.business.LineItem;
-import com.prs.business.Product;
+
 import com.prs.db.LineItemRepo;
-import com.prs.db.ProductRepo;
+
 
 
 @CrossOrigin
@@ -75,8 +77,8 @@ public class LineItemController {
 	
 	// List line items for a purchase request
 		@GetMapping("/lines-for-pr/{id}")
-		public Optional<LineItem> getPrRequestById(@PathVariable int id) {
-			return lineItemRepo.findById(id);
+		public List<LineItem> getLineItemByPr(@PathVariable int id) {
+			return lineItemRepo.findAllByRequestId(id);
 		}
 
 
