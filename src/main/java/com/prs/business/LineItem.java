@@ -12,13 +12,13 @@ public class LineItem {
 	
 	// Fields
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne
-	@JoinColumn(name="RequestID")
+	@JoinColumn(name = "RequestId")
 	private Request request;
 	@ManyToOne
-	@JoinColumn(name="ProductID")
+	@JoinColumn(name = "ProductId")
 	private Product product;
 	private int quantity;
 	

@@ -9,7 +9,7 @@ import com.prs.business.LineItem;
 
 public interface LineItemRepo extends JpaRepository<LineItem, Integer> {
 
-	// find line items with requestId
+	// Find line items with requestId
 	public List<LineItem> findByRequestId(int id);
 	
    

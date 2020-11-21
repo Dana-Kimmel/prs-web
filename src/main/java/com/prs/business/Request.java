@@ -19,7 +19,7 @@ public class Request {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int id;
 	@ManyToOne
-	@JoinColumn(name = "UserID")
+	@JoinColumn(name = "UserId")
 	private User user;
 	private String description;
 	private String justification;
