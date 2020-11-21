@@ -64,14 +64,14 @@ public class UserController {
 		return u.get();
 	}
 
-		// Post Mapping - Get User by Username and Password
-		@PostMapping("/login")
-		public Optional<User> login(@RequestBody User u) {
-			Optional<User> user = userRepo.findByUserNameAndPassword(u.getUserName(), u.getPassword());
-			if(user.isPresent()) {
-				return user;
-			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-			}		
+	// Post Mapping - Get User by Username and Password
+	@PostMapping("/login")
+	public Optional<User> login(@RequestBody User u) {
+		Optional<User> user = userRepo.findByUserNameAndPassword(u.getUserName(), u.getPassword());
+		if (user.isPresent()) {
+			return user;
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
 		}
+	}
 }

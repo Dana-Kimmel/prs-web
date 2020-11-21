@@ -15,18 +15,16 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-
 import com.prs.business.LineItem;
-
+import com.prs.business.Request;
 import com.prs.db.LineItemRepo;
-
-
+import com.prs.db.RequestRepo;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/lineitems")
 public class LineItemController {
-	
+
 	/*
 	 * A controller will implement 5 CRUD methods: 1) GET ALL 2) GET BY ID 3) POST -
 	 * INSERT 4) PUT - UPDATE 5) DELETE - DELETE
@@ -34,6 +32,8 @@ public class LineItemController {
 
 	@Autowired
 	private LineItemRepo lineItemRepo;
+	@Autowired
+	private RequestRepo requestRepo;
 
 	// Get all line items
 	@GetMapping("/")
@@ -49,8 +49,9 @@ public class LineItemController {
 
 	// Add a line item
 	@PostMapping("/")
-	public LineItem addPLineItem(@RequestBody LineItem l) {
+	public LineItem addLineItem(@RequestBody LineItem l) {
 		l = lineItemRepo.save(l);
+		recalculateTotal(l.getRequest());
 		return l;
 	}
 
@@ -58,28 +59,42 @@ public class LineItemController {
 	@PutMapping("/")
 	public LineItem updateLineItem(@RequestBody LineItem l) {
 		l = lineItemRepo.save(l);
+		recalculateTotal(l.getRequest());
 		return l;
 	}
 
 	// Delete a line item
 	@DeleteMapping("/{id}")
-	public LineItem deletePLineItem(@PathVariable int id) {
+	public LineItem deleteLineItem(@PathVariable int id) {
 		// Optional type will wrap a line item
 		Optional<LineItem> l = lineItemRepo.findById(id);
 		// isPresent() will return true if a line item was found
 		if (l.isPresent()) {
 			lineItemRepo.deleteById(id);
+			recalculateTotal(l.get().getRequest());
 		} else {
 			System.out.println("Error - line item not found for id " + id);
 		}
 		return l.get();
 	}
-	
-	// List line items for a purchase request
-		@GetMapping("/lines-for-pr/{id}")
-		public List<LineItem> getLineItemByPr(@PathVariable int id) {
-			return lineItemRepo.findAllByRequestId(id);
-		}
 
+	// List line items for a purchase request
+	@GetMapping("/lines-for-pr/{id}")
+	public List<LineItem> getLineItemByPr(@PathVariable int id) {
+		return lineItemRepo.findByRequestId(id);
+	}
+
+	// Recalculate total
+	private void recalculateTotal(Request r) {
+		double newTotal = 0.0;
+		
+		List<LineItem> lineItems = lineItemRepo.findByRequestId(r.getId());
+		for (LineItem lineItem : lineItems) {
+
+			newTotal += lineItem.getProduct().getPrice() * lineItem.getQuantity();
+		}
+		r.setTotal(newTotal);
+		requestRepo.save(r);
+	}
 
 }
