@@ -22,7 +22,7 @@ import com.prs.db.RequestRepo;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/lineitems")
+@RequestMapping("/line-items")
 public class LineItemController {
 
 	/*
