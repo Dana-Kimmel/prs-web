@@ -71,7 +71,7 @@ public class UserController {
 		if (user.isPresent()) {
 			return user;
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+			return null;
 		}
 	}
 }
